@@ -124,7 +124,7 @@ function start_database() {
 
     fi
 
-    if [ ${STARTDB:-"N" = "Y" } ] ; then
+    if [ ${STARTDB:-"N"} = "Y" ] ; then
 
         # Using RMAN for startup
         # => easy to switch from mount to open for running instance during execution
