@@ -3,20 +3,12 @@
   hostgroup: "{{ group_names[0] }}"
   oracle_dbca_rsp: "dbca_{{ dbh.oracle_db_name }}.rsp"        # Name of responsefile used by dbca. One per database
   oracle_netca_rsp: "netca_{{ dbh.home }}_{{ listener_name_template }}.rsp"
-  oracle_user: oracle                        # User that will own the Oracle Installations.
-  oracle_user_home: "/home/{{ oracle_user }}" # Home directory for oracle_user. Needed for passing in ssh-keys, profiles etc
-  oracle_group: oinstall                          # Primary group for oracle_user.
-  oracle_dba_group: dba                          # Primary group for oracle_user.
   grid_dba_group: asmdba                          # Primary group for oracle_user.
 
   oracle_env_dbca:
         ORACLE_HOME: "{{ oracle_home_db}}"
         LD_LIBRARY_PATH: "{{ oracle_home_db}}/lib"
 
-  oracle_stage: /u01/stage
-  oracle_rsp_stage: "{{ oracle_stage }}/rsp"
-  oracle_inventory_loc: /u01/app/oraInventory
-  oracle_base: /u01/app/oracle
   oracle_profile_name: ".profile_{{ item.oracle_db_name }}"       # Name of profile-file. Sets up the environment for that database. One per database
   oracle_dbf_dir_fs: /u01/oradata/                                # If storage_type=FS this is where the database is placed.
   oracle_reco_dir_fs: /u01/fra/                                   # If storage_type=FS this is where the fast recovery area is placed.
@@ -27,9 +19,6 @@
   # datafile_dest: "{% if item.0.storage_type|upper == 'FS' %}{{ oracle_dbf_dir_fs }}{% elif item.0.storage_type|upper == 'ASM' %}{{ oracle_dbf_dir_asm }}{% else %}{% endif %}"
   # recoveryfile_dest: "{% if item.0.storage_type|upper == 'FS' %}{{ oracle_reco_dir_fs }}{% elif item.0.storage_type|upper == 'ASM' %}{{ oracle_reco_dir_asm }}{% else %}{% endif %}"
 
-  configure_cluster: false
-  #oracle_install_option_gi: "none"
-  oracle_gi_cluster_type: STANDARD
   hostgroup_hub: "{{ hostgroup }}-hub"
   hostgroup_leaf: "{{ hostgroup }}-leaf"
   create_listener: "{%- if oracle_install_option_gi is defined -%}
