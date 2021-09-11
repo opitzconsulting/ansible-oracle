@@ -35,7 +35,7 @@
       environment:
         ORACLE_HOME: "{{ oracle_home_db }}"
         ORACLE_SID: "{{ dbh.oracle_db_instance_name | default(dbh.oracle_db_unique_name | default(dbh.oracle_db_name)) }}"
-        perfstat_password: perfstat
+        perfstat_password: "{{ db_password_cdb }}"
         temporary_tablespace: "{{ dbh.statspack.tablespace_temp | default('temp') }}"
         default_tablespace: "{{ dbh.statspack.tablespace | default('sysaux') }}"
         purgedates: "{{ dbh.statspack.purgedays | default(35) }}"
