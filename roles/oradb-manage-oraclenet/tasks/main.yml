@@ -1,11 +1,11 @@
 ---
 - name: manage-db | set fact for listener_name from oracle_databases
   set_fact:
-      create_listener: "{{ create_listener }}"
+    create_listener: "{{ create_listener }}"
   with_items: "{{ oracle_databases }}"
   loop_control:
-     loop_var: dbh
-     label: "{{ dbh.oracle_db_name | default('') }}"
+    loop_var: dbh
+    label: "{{ dbh.oracle_db_name | default('') }}"
   tags:
     - set_fact
     - listener
@@ -14,7 +14,7 @@
   with_items:
     - "{{ tnsnames_installed }}"
   loop_control:
-     loop_var: tnsinst
+    loop_var: tnsinst
   when: tnsnames_installed is defined
   tags: tnsnames
 
@@ -22,7 +22,7 @@
   with_items:
     - "{{ sqlnet_installed }}"
   loop_control:
-     loop_var: sqlnetinst
+    loop_var: sqlnetinst
   when: sqlnet_installed is defined
   tags: sqlnet
 
@@ -30,6 +30,6 @@
   with_items:
     - "{{ listener_installed }}"
   loop_control:
-     loop_var: lsnrinst
+    loop_var: lsnrinst
   when: listener_installed is defined
   tags: listener

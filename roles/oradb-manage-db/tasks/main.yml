@@ -3,6 +3,7 @@
 
 # Configure listener.ora, sqlnet.ora and tnsnames.ora
 - include_role:
+    # noqa unnamed-task
     name: oradb-manage-oraclenet
   tags:
     - listener
