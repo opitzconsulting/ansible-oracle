@@ -1,37 +1,12 @@
 ---
 # tasks file for manage-db
 
-- include_tasks: tnsnames.yml
-  with_items:
-    - "{{ tnsnames_installed }}"
-  loop_control:
-    loop_var: tnsinst
-  when: tnsnames_installed is defined
-  tags: tnsnames2
-
-- name: manage-db | set fact for Listener
-  set_fact:
-    create_listener: "{{ create_listener }}"
-  with_items: "{{ oracle_databases }}"
-  loop_control:
-    loop_var: dbh
-  tags: set_fact
-
-- include_tasks: sqlnet.yml
-  with_items:
-    - "{{ sqlnet_installed }}"
-  loop_control:
-    loop_var: sqlnetinst
-  when: sqlnet_installed is defined
-  tags: sqlnet2
-
-- include_tasks: listener_details.yml
-  with_items:
-    - "{{ listener_installed }}"
-  loop_control:
-    loop_var: lsnrinst
-  when: listener_installed is defined
-  tags: listener2
+# Configure listener.ora, sqlnet.ora and tnsnames.ora
+- include_role:
+    name: oradb-manage-oraclenet
+  tags:
+    - listener
+    - listener2
 
 - include_tasks: listener.yml
   with_items:

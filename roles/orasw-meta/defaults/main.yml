@@ -11,6 +11,15 @@ asmoper_group: asmoper
 asmdba_group: asmdba                              # Primary group for oracle_user.
 asmadmin_group: asmadmin                          # Primary group for oracle_user.
 
+oracle_dba_group: dba                        # osdba group for oracle_user.
+
+oracle_stage: /u01/stage
+oracle_rsp_stage: "{{ oracle_stage }}/rsp"
+oracle_inventory_loc: /u01/app/oraInventory
+
+configure_cluster: false
+oracle_gi_cluster_type: STANDARD
+
 db_homes_config:
   18300-base:
     home: db1-base
