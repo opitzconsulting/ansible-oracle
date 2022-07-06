@@ -60,7 +60,7 @@
     - ocmconfig
 
 - name: gi_opatch | Manage opatchauto patches for GI (after software only install)
-  ansible.builtin.oracle_opatch:
+  oracle_opatch:
     oracle_home={{ oracle_home_gi }}
     patch_base={{ oracle_patch_install }}/{{ oracle_install_version_gi }}/{{ item.0.path | default (item.0.patchid) }}/{{ item.1 }}
     patch_id={{ item.1 }}
@@ -88,7 +88,7 @@
   register: psuapplym
 
 - name: gi_opatch | Manage opatchauto patches for GI
-  ansible.builtin.oracle_opatch:
+  oracle_opatch:
     oracle_home={{ oracle_home_gi }}
     patch_base={{ oracle_patch_install }}/{{ oracle_install_version_gi }}/{{ item.path | default (item.patchid) }}/
     patch_id={{ item.patchid }}
