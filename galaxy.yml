@@ -1,5 +1,5 @@
 ---
-namespace: opitz
+namespace: opitzconsulting
 name: ansible_oracle
 version: 3.0.0
 readme: README.md

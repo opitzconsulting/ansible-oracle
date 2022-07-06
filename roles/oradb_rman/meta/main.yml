@@ -20,4 +20,4 @@ galaxy_info:
     - oracle
 
 dependencies:
-  - role: orasw-meta
+  - role: orasw_meta
