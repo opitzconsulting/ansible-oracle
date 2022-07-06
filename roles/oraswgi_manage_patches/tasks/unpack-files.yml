@@ -1,7 +1,7 @@
 ---
 
 - name: gi_opatch | Extract GI psu files to patch base
-  unarchive:
+  ansible.builtin.unarchive:
     src={{ oracle_stage }}/{{ item[0].filename }}
     dest={{ oracle_patch_stage }}/{{ oracle_install_version_gi }}
     creates={{ oracle_patch_stage }}/{{ oracle_install_version_gi }}/{{ item[0].creates | default (omit) }}
@@ -22,7 +22,7 @@
     - oragridpsuunpack1
 
 - name: gi_opatch | Extract GI psu files to patch base (from remote location)
-  unarchive:
+  ansible.builtin.unarchive:
     src={{ oracle_stage_remote }}/{{ item.0.filename }}
     dest={{ oracle_patch_stage }}/{{ oracle_install_version_gi }}
     creates={{ oracle_patch_stage }}/{{ oracle_install_version_gi }}/{{ item[0].creates | default (omit) }}

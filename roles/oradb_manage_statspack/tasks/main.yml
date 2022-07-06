@@ -1,7 +1,7 @@
 ---
 - block:
     - name: oradb_manage_statspack | Drop Statspack Schema
-      script: spdrop.sh
+      ansible.builtin.script: spdrop.sh
       environment:
         ORACLE_HOME: "{{ oracle_home_db }}"
         ORACLE_SID: "{{ dbh.oracle_db_instance_name | default(dbh.oracle_db_unique_name | default(dbh.oracle_db_name)) }}"
@@ -16,7 +16,7 @@
         - dbh.statspack is defined
         - dbh.statspack.state | default('present') == 'absent'
 
-    - debug: msg="{{ item.stdout_lines }}"  # noqa unnamed-task
+    - ansible.builtin.debug: msg="{{ item.stdout_lines }}"  # noqa unnamed-task
       with_items:
         - "{{ statspackdropcmd.results }}"
       loop_control:
@@ -31,7 +31,7 @@
 
 - block:
     - name: oradb_manage_statspack | Create Statspack Schema (existing user is ignored)
-      script: spcreate.sh
+      ansible.builtin.script: spcreate.sh
       environment:
         ORACLE_HOME: "{{ oracle_home_db }}"
         ORACLE_SID: "{{ dbh.oracle_db_instance_name | default(dbh.oracle_db_unique_name | default(dbh.oracle_db_name)) }}"
@@ -54,7 +54,7 @@
         - dbh.statspack is defined
         - dbh.statspack.state | default('present') == 'present'
 
-    - debug: msg="{{ item.stdout_lines }}"  # noqa unnamed-task
+    - ansible.builtin.debug: msg="{{ item.stdout_lines }}"  # noqa unnamed-task
       with_items:
         - "{{ statspackcmd.results }}"
       loop_control:
@@ -131,7 +131,7 @@
 
 - block:
     - name: oradb_manage_statspack | Drop Statspack Schema (PDB)
-      script: spdrop.sh
+      ansible.builtin.script: spdrop.sh
       environment:
         ORACLE_HOME: "{{ oracle_home_db }}"
         ORACLE_SID: "{{ oracle_db_instance_name }}"
@@ -152,7 +152,7 @@
         - pdb.0.statspack is defined
         - pdb.0.statspack.state | default('present') == 'absent'
 
-    - debug: msg="{{ item.stdout_lines }}"  # noqa unnamed-task
+    - ansible.builtin.debug: msg="{{ item.stdout_lines }}"  # noqa unnamed-task
       with_items:
         - "{{ statspackdropcmd.results }}"
       loop_control:
@@ -168,7 +168,7 @@
 
 - block:
     - name: oradb_manage_statspack | Create Statspack Schema in PDBs (existing user is ignored)
-      script: spcreate.sh
+      ansible.builtin.script: spcreate.sh
       environment:
         ORACLE_HOME: "{{ oracle_home_db }}"
         ORACLE_SID: "{{ oracle_db_instance_name }}"
@@ -194,7 +194,7 @@
         - pdb.0.statspack is defined
         - pdb.0.statspack.state | default('present') == 'present'
 
-    - debug: msg="{{ item.stdout_lines }}"  # noqa unnamed-task
+    - ansible.builtin.debug: msg="{{ item.stdout_lines }}"  # noqa unnamed-task
       with_items:
         - "{{ statspackcmd.results }}"
       loop_control:

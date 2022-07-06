@@ -1,13 +1,13 @@
 ---
 - name: ssh-keys | get public key for oracle user
-  shell: cat /home/{{ oracle_user }}/.ssh/id_rsa.pub
+  ansible.builtin.shell: cat /home/{{ oracle_user }}/.ssh/id_rsa.pub
   # noqa command-instead-of-shell no-changed-when
   register: oracle_key
   tags:
     - sshkeys
 
 - name: ssh-keys | get public key for grid user
-  shell: cat /home/{{ grid_user }}/.ssh/id_rsa.pub
+  ansible.builtin.shell: cat /home/{{ grid_user }}/.ssh/id_rsa.pub
   # noqa command-instead-of-shell
   register: grid_key
   when: role_separation
@@ -15,7 +15,7 @@
     - sshkeys
 
 - name: ssh-keys | Add keys for {{ oracle_user }} user
-  authorized_key: user={{ oracle_user }} key="{{ item[1] }}"
+  ansible.builtin.authorized_key: user={{ oracle_user }} key="{{ item[1] }}"
   delegate_to: "{{ item[0] }}"
   with_nested:
     - "{{ groups[hostgroup] }}"
@@ -25,7 +25,7 @@
   when: oracle_key is defined
 
 - name: ssh-keys | Add keys for {{ grid_user }} user
-  authorized_key: user={{ grid_user }} key="{{ item[1] }}"
+  ansible.builtin.authorized_key: user={{ grid_user }} key="{{ item[1] }}"
   delegate_to: "{{ item[0] }}"
   with_nested:
     - "{{ groups[hostgroup] }}"
@@ -35,7 +35,7 @@
   when: role_separation and grid_key is defined
 
 - name: ssh-keys | create .known_hosts
-  file:
+  ansible.builtin.file:
     path: "/home/{{ item }}/.ssh/known_hosts"
     state: touch
     owner: "{{ item }}"
@@ -47,7 +47,7 @@
   changed_when: false
   tags: sshkeys,known_hosts
 
-- include: known-hosts.yml
+- ansible.builtin.include: known-hosts.yml
   with_items:
     - "{{ oracle_user }}"
     - "{% if role_separation  %}{{ grid_user }}{% else %}[]{% endif %}"

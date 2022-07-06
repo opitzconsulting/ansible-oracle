@@ -1,7 +1,7 @@
 ---
 
 - name: ASM-storage | run kpartx to add partition
-  shell: kpartx -a {{ item.1.device }}
+  ansible.builtin.shell: kpartx -a {{ item.1.device }}
   # noqa command-instead-of-shell
   args:
     creates: "{{ item.1.device }}{{ partition_suffix }}"

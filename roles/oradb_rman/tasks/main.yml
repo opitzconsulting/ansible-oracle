@@ -2,7 +2,7 @@
 
 - name: Default Destinations for RMAN
   no_log: true
-  assert:
+  ansible.builtin.assert:
     that:
       - rman_controlfile_autobackup_disk_default
       - rman_channel_disk_default
@@ -11,7 +11,7 @@
 
 # autofs is configured in a special way to mount the shares with needed parameters
 - name: configure autofs for RMAN
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest=/etc/auto.master
     regexp="^{{ rmanautofsmount }} "
     line="{{ rmanautofsmount }} /etc/auto.net --timeout=60 rw,hard,rsize=32768,wsize=32768,proto=tcp,nfsvers=3"
@@ -19,29 +19,29 @@
   tags: autofs
 
 - name: Create Mountpoint
-  file: dest={{ rmanautofsmount }} state=directory mode=0755
+  ansible.builtin.file: dest={{ rmanautofsmount }} state=directory mode=0755
   when: rmanautofs
   tags: autofs
 
 - name: Restart autofs
-  service: name=autofs enabled=yes state=restarted
+  ansible.builtin.service: name=autofs enabled=yes state=restarted
   when: rmanautofs
   tags: autofs
 
 - name: Create bin-Directory for rman_backup
-  file: path={{ oracle_base }}/bin state=directory mode=0755
+  ansible.builtin.file: path={{ oracle_base }}/bin state=directory mode=0755
   tags:
     - rmancopy
 
 - name: Create log-Directory for cron output
-  file: path={{ rman_cron_logdir }} state=directory mode=0755 owner={{ oracle_user }}
+  ansible.builtin.file: path={{ rman_cron_logdir }} state=directory mode=0755 owner={{ oracle_user }}
   tags:
     - rmancron
     - rmancopy
 
 # dummy with_together for item.0.db_name in default/main.yml
 - name: Create Directory for rman-scripts
-  file: path={{ rman_script_dir }} state=directory mode=0755 owner={{ oracle_user }}
+  ansible.builtin.file: path={{ rman_script_dir }} state=directory mode=0755 owner={{ oracle_user }}
   with_together:
     - "{{ oracle_databases }}"
     - ""
@@ -50,7 +50,7 @@
 
 # dummy with_together for item.0.db_name in default/main.yml
 - name: Create Directory for rman-logfiles
-  file: path={{ rman_log_dir }} state=directory mode=0755 owner={{ oracle_user }}
+  ansible.builtin.file: path={{ rman_log_dir }} state=directory mode=0755 owner={{ oracle_user }}
   with_together:
     - "{{ oracle_databases }}"
     - ""
@@ -58,13 +58,13 @@
     - rmancopy
 
 - name: copy rman_backup.sh
-  copy: dest={{ oracle_base }}/bin src=rman_backup.sh backup=yes mode=755
+  ansible.builtin.copy: dest={{ oracle_base }}/bin src=rman_backup.sh backup=yes mode=755
   tags:
     - rmancopy
 
 # rman_script_dir: {{oracle_admin_db}}/rman/
 - name: copy RMAN scipts
-  template: dest={{ rman_script_dir }}/{{ item.1.name }}.rman src={{ item.1.name }}.rman.j2 backup=yes mode=644 owner={{ oracle_user }}
+  ansible.builtin.template: dest={{ rman_script_dir }}/{{ item.1.name }}.rman src={{ item.1.name }}.rman.j2 backup=yes mode=644 owner={{ oracle_user }}
   with_subelements:
     - "{{ oracle_databases }}"
     - rman_jobs
@@ -73,7 +73,7 @@
     - rmancopy
 
 - name: Create directory for TNS_ADMIN
-  file: dest={{ rman_tns_admin }} state=directory owner={{ oracle_user }} mode=0755
+  ansible.builtin.file: dest={{ rman_tns_admin }} state=directory owner={{ oracle_user }} mode=0755
   with_items:
     - "{{ oracle_databases }}"
   when: item.rman_tnsalias is defined
@@ -81,7 +81,7 @@
     - tns
 
 - name: copy sqlnet.ora for wallet
-  template: src=sqlnet.ora.j2 dest={{ rman_tns_admin }}/sqlnet.ora owner={{ oracle_user }} mode=0644
+  ansible.builtin.template: src=sqlnet.ora.j2 dest={{ rman_tns_admin }}/sqlnet.ora owner={{ oracle_user }} mode=0644
   with_items:
     - "{{ oracle_databases }}"
   when: item.rman_tnsalias is defined
@@ -89,7 +89,7 @@
     - tns
 
 - name: copy tnsnames.ora for catalog
-  template: src=tnsnames.ora.j2 dest={{ rman_tns_admin }}/tnsnames.ora owner={{ oracle_user }} mode=644 backup=true
+  ansible.builtin.template: src=tnsnames.ora.j2 dest={{ rman_tns_admin }}/tnsnames.ora owner={{ oracle_user }} mode=644 backup=true
   with_items:
     - "{{ oracle_databases }}"
   when: item.rman_tnsalias is defined
@@ -97,7 +97,7 @@
     - tns
 
 - name: Wallet create
-  shell: "test -d {{ rman_wallet_loc }} || echo -e '{{ rman_wallet_password }}\n{{ rman_wallet_password }}' | {{ oracle_home_db }}/bin/mkstore -create -nologo -wrl {{ rman_wallet_loc }}"
+  ansible.builtin.shell: "test -d {{ rman_wallet_loc }} || echo -e '{{ rman_wallet_password }}\n{{ rman_wallet_password }}' | {{ oracle_home_db }}/bin/mkstore -create -nologo -wrl {{ rman_wallet_loc }}"
   # noqa risky-shell-pipe yaml
   become: true
   become_user: "{{ oracle_user }}"
@@ -110,7 +110,7 @@
 # no_log => secure password against logfiles
 # ignore errors during createCredential when entry is existing
 - name: Wallet createCredential
-  shell: "echo -e '{{ rman_wallet_password }}' | {{ oracle_home_db }}/bin/mkstore -wrl {{ rman_wallet_loc }} -nologo -createCredential {{ item.rman_tnsalias }} {{ item.rman_user }} {{ item.rman_password }}; exit 0"
+  ansible.builtin.shell: "echo -e '{{ rman_wallet_password }}' | {{ oracle_home_db }}/bin/mkstore -wrl {{ rman_wallet_loc }} -nologo -createCredential {{ item.rman_tnsalias }} {{ item.rman_user }} {{ item.rman_password }}; exit 0"
   # noqa yaml risky-shell-pipe
   become: true
   become_user: "{{ oracle_user }}"
@@ -127,7 +127,7 @@
 # The task is only execute once on master_node when GI is installed!
 # no catalog connection, because setting initial parameters with catalog takes much more time
 - name: Execute RMAN-Script at playbook
-  shell: "{{ oracle_base }}/bin/rman_backup.sh -a {{ item.1.name }} -s {{ item.0.oracle_db_instance_name | default(item.0.oracle_db_name) }} -r {{ rman_script_dir }} -l {{ rman_log_dir }} | tee -a {{ rman_cron_logdir }}/rman_{{ item.1.name }}.log"
+  ansible.builtin.shell: "{{ oracle_base }}/bin/rman_backup.sh -a {{ item.1.name }} -s {{ item.0.oracle_db_instance_name | default(item.0.oracle_db_name) }} -r {{ rman_script_dir }} -l {{ rman_log_dir }} | tee -a {{ rman_cron_logdir }}/rman_{{ item.1.name }}.log"
   # noqa risky-shell-pipe yaml
   environment:
     - PATH: /bin:/usr/bin
@@ -145,7 +145,7 @@
   tags:
     - rmanexecute
 
-- debug: msg={{ item.results.stdout_lines | default("") }}  # noqa unnamed-task
+- ansible.builtin.debug: msg={{ item.results.stdout_lines | default("") }}  # noqa unnamed-task
   with_items:
     - "{{ rmanexecimmediate }}"
   when: rmanexecimmediate is defined
@@ -153,7 +153,7 @@
     - rmanexecute
 
 - name: Add Environment variables to /ec/cron.d
-  cron:
+  ansible.builtin.cron:
     cron_file: "{{ rman_cronfile }}"
     user: "{{ oracle_user }}"
     env: true
@@ -167,7 +167,7 @@
     - rmancron
 
 - name: Create crontab entries for RMAN Backup
-  cron:
+  ansible.builtin.cron:
     name: rman_backup_{{ item.0.oracle_db_name }}_{{ item.1.name }}
     cron_file: "{{ rman_cronfile }}"
     user: "{{ oracle_user }}"
@@ -194,6 +194,6 @@
     - rmancron
 
 - name: Create directory for mk-job
-  file: dest=/var/lib/check_mk_agent/job/{{ oracle_user }} state=directory owner={{ oracle_user }} mode=0755
+  ansible.builtin.file: dest=/var/lib/check_mk_agent/job/{{ oracle_user }} state=directory owner={{ oracle_user }} mode=0755
   when: rman_cron_mkjob
   tags: rmancron

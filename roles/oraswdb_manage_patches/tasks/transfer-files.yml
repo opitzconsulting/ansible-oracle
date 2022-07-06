@@ -1,6 +1,6 @@
 ---
 - name: db_opatch | Copy oracle DB patch (opatchauto) to server (www)
-  get_url:
+  ansible.builtin.get_url:
     url={{ oracle_sw_source_www }}/{{ item[0].filename }}
     dest={{ oracle_stage }}
     mode=775
@@ -14,7 +14,7 @@
     - oragridpatchget
 
 - name: db_opatch | Copy oracle DB patch (opatchauto) to server (local)
-  copy:
+  ansible.builtin.copy:
     src={{ oracle_sw_source_local }}/{{ item[0].filename }}
     dest={{ oracle_stage }}
     mode=0775
@@ -29,7 +29,7 @@
     - oragridpatchpush
 
 - name: db_opatch | Copy oracle DB patch (opatch) to server (www)
-  get_url:
+  ansible.builtin.get_url:
     url={{ oracle_sw_source_www }}/{{ item[0].filename }}
     dest={{ oracle_stage }}/{{ item[0].filename }}
     mode=0775
@@ -48,7 +48,7 @@
     - oragridpatchget
 
 - name: db_opatch | Copy oracle DB patch (opatch) to server (local)
-  copy:
+  ansible.builtin.copy:
     src={{ oracle_sw_source_local }}/{{ item[0].filename }}
     dest={{ oracle_stage }}/{{ item[0].filename }}
     mode=775
@@ -68,7 +68,7 @@
     - oragridpatchpush
 
 - name: db_opatch | Copy oracle opatch to server (www)
-  get_url:
+  ansible.builtin.get_url:
     url={{ oracle_sw_source_www }}/{{ item.filename }}
     dest={{ oracle_stage }}
     mode=775
@@ -81,7 +81,7 @@
     - oragridopatchget
 
 - name: db_opatch | Copy oracle opatch to server (local)
-  copy:
+  ansible.builtin.copy:
     src={{ oracle_sw_source_local }}/{{ item.filename }}
     dest={{ oracle_stage }}
     mode=775

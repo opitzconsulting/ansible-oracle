@@ -1,13 +1,13 @@
 ---
 - name: assert
-  assert:
+  ansible.builtin.assert:
     that:
       - golden_image_dest is defined
 
 - block:  # noqa unnamed-task
 
     - name: Create destination directory for Golden-Image
-      file:
+      ansible.builtin.file:
         path: "{{ golden_image_dest }}/{{ dbh.home }}"
         state: directory
         mode: '0755'
@@ -20,7 +20,7 @@
         - "db_version is version('18', '>=')"
 
     - name: Create Golden-Image
-      command: "{{ oracle_home_db }}/runInstaller -silent -createGoldImage -destinationLocation {{ golden_image_dest }}/{{ dbh.home }}"
+      ansible.builtin.command: "{{ oracle_home_db }}/runInstaller -silent -createGoldImage -destinationLocation {{ golden_image_dest }}/{{ dbh.home }}"
       with_items:
         - "{{ db_homes_installed | list | unique }}"
       loop_control:
@@ -31,7 +31,7 @@
       register: createimage
 
     - name: test
-      debug: msg="{{ item.stdout_lines }}"
+      ansible.builtin.debug: msg="{{ item.stdout_lines }}"
       with_items:
         - "{{ createimage.results }}"
       loop_control:

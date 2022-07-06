@@ -128,7 +128,7 @@
   when: oracle_home_gi not in checkgiinstall.stdout
 
 - name: install_home_gi | include role oraswgi_manage_patches
-  include_role:
+  ansible.builtin.include_role:
     name: oraswgi_manage_patches
   when: patch_before_rootsh and apply_patches_gi
 

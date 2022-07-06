@@ -6,7 +6,6 @@ skip_list:
 
   - var-naming
   # temporary deactived - will be removed in next PRs
-  - fqcn-builtins
   - schema
 
 exclude_paths:

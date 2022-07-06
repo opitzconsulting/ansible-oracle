@@ -1,6 +1,6 @@
 ---
 - name: systemd register and reload
-  systemd:
+  ansible.builtin.systemd:
     name=oracle-rdbms
     daemon_reload=yes
     enabled=yes

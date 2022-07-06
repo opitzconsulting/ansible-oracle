@@ -1,15 +1,15 @@
 ---
 - name: gi_opatch | check if GI has been configured
-  stat: path=/etc/oracle/olr.loc
+  ansible.builtin.stat: path=/etc/oracle/olr.loc
   register: olrloc
 
 - name: gi_opatch | set fact for patch_before_rootsh
-  set_fact:
+  ansible.builtin.set_fact:
     patch_before_rootsh: false
   when: olrloc.stat.exists and patch_before_rootsh
 
 - name: gi_opatch | Create patch-base directory (version specific)
-  file:
+  ansible.builtin.file:
     dest={{ oracle_patch_stage }}/{{ oracle_install_version_gi }}
     mode=775
     owner={{ grid_install_user }}
@@ -38,7 +38,7 @@
   tags: current_opatch_version
 
 - name: gi_opatch | Configure ocm.rsp (1)
-  template:
+  ansible.builtin.template:
     src=ocmrsp.expect.j2
     dest={{ oracle_patch_stage }}/{{ oracle_install_version_gi }}/ocmrsp.expect
     mode=0777
@@ -50,7 +50,7 @@
     - ocmconfig
 
 - name: gi_opatch | Configure ocm.rsp (2)
-  shell: "{{ oracle_patch_stage }}/{{ oracle_install_version_gi }}/ocmrsp.expect"
+  ansible.builtin.shell: "{{ oracle_patch_stage }}/{{ oracle_install_version_gi }}/ocmrsp.expect"
   # noqa command-instead-of-shell
   when: apply_patches_gi and current_opatch_version is defined and current_opatch_version.msg is version_compare('12.2.0.1.5', '<')
   become: true
@@ -60,7 +60,7 @@
     - ocmconfig
 
 - name: gi_opatch | Manage opatchauto patches for GI (after software only install)
-  oracle_opatch:
+  ansible.builtin.oracle_opatch:
     oracle_home={{ oracle_home_gi }}
     patch_base={{ oracle_patch_install }}/{{ oracle_install_version_gi }}/{{ item.0.path | default (item.0.patchid) }}/{{ item.1 }}
     patch_id={{ item.1 }}
@@ -88,7 +88,7 @@
   register: psuapplym
 
 - name: gi_opatch | Manage opatchauto patches for GI
-  oracle_opatch:
+  ansible.builtin.oracle_opatch:
     oracle_home={{ oracle_home_gi }}
     patch_base={{ oracle_patch_install }}/{{ oracle_install_version_gi }}/{{ item.path | default (item.patchid) }}/
     patch_id={{ item.patchid }}

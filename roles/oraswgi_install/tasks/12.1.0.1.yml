@@ -55,7 +55,7 @@
   run_once: "{{ configure_cluster }}"
   when: oracle_home_gi not in checkgiinstall.stdout
 
-- include_role:
+- ansible.builtin.include_role:
     # noqa unnamed-task
     name: oraswgi_manage_patches
   when: patch_before_rootsh and apply_patches_gi

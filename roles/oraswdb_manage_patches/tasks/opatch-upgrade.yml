@@ -7,13 +7,13 @@
   tags: current_opatch_version
   when: db_homes_config[dbh.home]['opatch_minversion'] is defined
 
-- debug: var=current_opatch_version.msg
+- ansible.builtin.debug: var=current_opatch_version.msg
   # noqa unnamed-task no-handler
   tags: current_opatch_version
   when: current_opatch_version.changed
 
 - name: db_opatch | Extract OPatch to DB Home
-  unarchive:
+  ansible.builtin.unarchive:
     src={{ oracle_stage }}/{{ item.filename }}
     dest={{ oracle_home_db }}
     copy=no
@@ -31,7 +31,7 @@
     - oragridpatchunpack
 
 - name: db_opatch | Extract OPatch to DB Home (from remote location)
-  unarchive:
+  ansible.builtin.unarchive:
     src={{ oracle_stage_remote }}/{{ item.filename }}
     dest={{ oracle_home_db }}
     copy=no
@@ -56,7 +56,7 @@
   tags: current_opatch_version
   when: db_homes_config[dbh.home]['opatch_minversion'] is defined
 
-- debug: var=current_opatch_version.msg
+- ansible.builtin.debug: var=current_opatch_version.msg
   # noqa unnamed-task no-handler
   tags: current_opatch_version
   when: current_opatch_version.changed

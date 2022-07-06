@@ -1,7 +1,7 @@
 ---
 - block:  # noqa unnamed-task
     - name: manage_db | create directory dbenv
-      file:
+      ansible.builtin.file:
         dest: "{{ dbenvdir }}"
         state: directory
         owner: "{{ oracle_user }}"
@@ -9,7 +9,7 @@
         mode: '0755'
 
     - name: manage_db | copy ocenv
-      copy:
+      ansible.builtin.copy:
         src: ocenv
         dest: "{{ dbenvdir }}"
         owner: "{{ oracle_user }}"

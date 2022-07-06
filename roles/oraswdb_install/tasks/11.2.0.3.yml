@@ -1,6 +1,6 @@
 ---
 - name: install_home_db | Extract files to stage-area
-  unarchive:
+  ansible.builtin.unarchive:
     src={{ oracle_stage }}/{{ item[0].filename }}
     dest={{ oracle_stage }}/{{ item[0].version }}
     copy=no
@@ -20,7 +20,7 @@
     - oradbswunpack
 
 - name: install_home_db | Extract files to stage-area (from remote location)
-  unarchive:
+  ansible.builtin.unarchive:
     src={{ oracle_stage_remote }}/{{ item[0].filename }}
     dest={{ oracle_stage }}/{{ item[0].version }}
     copy=no
@@ -36,7 +36,7 @@
     - oradbswunpack
 
 - name: install_home_db | Install Oracle Database Server
-  shell: "{{ oracle_stage_install }}/{{ db_homes_config[dbh.home]['version'] }}/database/runInstaller -responseFile {{ oracle_rsp_stage }}/{{ oracle_db_responsefile }} -ignorePrereq -ignoreSysPrereqs -silent -waitforcompletion"
+  ansible.builtin.shell: "{{ oracle_stage_install }}/{{ db_homes_config[dbh.home]['version'] }}/database/runInstaller -responseFile {{ oracle_rsp_stage }}/{{ oracle_db_responsefile }} -ignorePrereq -ignoreSysPrereqs -silent -waitforcompletion"
   # noqa yaml command-instead-of-shell
   become: true
   become_user: "{{ oracle_user }}"
@@ -46,7 +46,7 @@
     - oradbinstall
   register: oradbinstall
 
-- debug: var=oradbinstall.stdout_lines
+- ansible.builtin.debug: var=oradbinstall.stdout_lines
   # noqa unnamed-task ignore-errors
   run_once: "{{ configure_cluster }}"
   when: oracle_home_db not in existing_dbhome.stdout_lines and oradbinstall.changed
