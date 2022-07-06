@@ -46,7 +46,7 @@
   tags: create_db,dbcatemplate
 
 - name: manage_db | create/manage database
-  opitzconsulting.ansible_oracle.oracle_db:
+  oracle_db:
     oracle_home: "{{ oracle_home_db }}"
     port: "{{ listener_port_template }}"
     sys_password: "{{ dbca_sys_pass }}"
@@ -88,7 +88,7 @@
   when: dbh.state|lower == 'absent'
 
 - name: manage_db | remove database
-  opitzconsulting.ansible_oracle.oracle_db:
+  oracle_db:
     oracle_home={{ oracle_home_db }}
     port={{ listener_port_template }}
     sys_password={{ dbca_sys_pass }}
