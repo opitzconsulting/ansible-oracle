@@ -19,7 +19,7 @@
 - include: opatch-upgrade.yml
   when: apply_patches_db
 
-- name: db-opatch | Configure ocm.rsp (1)
+- name: db_opatch | Configure ocm.rsp (1)
   template:
     src=ocmrsp.expect.j2
     dest={{ oracle_patch_stage }}/{{ db_version }}/ocmrsp.expect
@@ -31,7 +31,7 @@
   tags:
     - ocmconfig
 
-- name: db-opatch | Configure ocm.rsp (2)
+- name: db_opatch | Configure ocm.rsp (2)
   shell: "{{ oracle_patch_stage }}/{{ db_version }}/ocmrsp.expect"
   # noqa command-instead-of-shell
   when: apply_patches_db and current_opatch_version.msg is version_compare('12.2.0.1.5', '<')
@@ -41,7 +41,7 @@
   tags:
     - ocmconfig
 
-- name: db-opatch | Remove unwanted patches from DB
+- name: db_opatch | Remove unwanted patches from DB
   oracle_opatch:
     oracle_home={{ oracle_home_db }}
     patch_base={{ oracle_patch_install }}/{{ db_version }}/{{ item.path | default (item.patchid) }}/
@@ -66,7 +66,7 @@
     - item.state == "absent"
   register: psuapplym
 
-- name: db-opatch | Manage opatchauto patches for DB (non-gi)
+- name: db_opatch | Manage opatchauto patches for DB (non-gi)
   oracle_opatch:
     oracle_home={{ oracle_home_db }}
     patch_base={{ oracle_patch_install }}/{{ db_version }}/{{ item.0.path | default (item.0.patchid) }}/{{ item.1 }}
@@ -90,7 +90,7 @@
   when: apply_patches_db and db_homes_config[dbh.home]['opatchauto'] is defined and item.1 is defined and not olrloc.stat.exists
   register: psuapplym
 
-- name: db-opatch | Manage opatchauto patches for DB (gi)
+- name: db_opatch | Manage opatchauto patches for DB (gi)
   oracle_opatch:
     oracle_home={{ oracle_home_db }}
     patch_base={{ oracle_patch_install }}/{{ db_version }}/{{ item.path | default (item.patchid) }}/
@@ -110,7 +110,7 @@
   when: apply_patches_db and db_homes_config[dbh.home]['opatchauto'] is defined and olrloc.stat.exists
   register: psuapplym
 
-- name: db-opatch | Manage patches for DB
+- name: db_opatch | Manage patches for DB
   oracle_opatch:
     oracle_home={{ oracle_home_db }}
     patch_base={{ oracle_patch_install }}/{{ db_version }}/{{ item.path | default (item.patchid) }}/
@@ -133,7 +133,7 @@
   when: apply_patches_db and db_homes_config[dbh.home]['opatch'] is defined
   register: psuapplym
 
-- name: db-opatch | Check patches
+- name: db_opatch | Check patches
   shell: "{{ oracle_home_db }}/OPatch/opatch lspatches -oh {{ oracle_home_db }}"
   # noqa command-instead-of-shell
   become: true
@@ -141,5 +141,5 @@
   changed_when: false
   register: dbhome_patches
 
-- name: db-opatch | Check patches
+- name: db_opatch | Check patches
   debug: var=dbhome_patches.stdout_lines

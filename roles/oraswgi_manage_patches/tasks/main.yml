@@ -1,14 +1,14 @@
 ---
-- name: gi-opatch | check if GI has been configured
+- name: gi_opatch | check if GI has been configured
   stat: path=/etc/oracle/olr.loc
   register: olrloc
 
-- name: gi-opatch | set fact for patch_before_rootsh
+- name: gi_opatch | set fact for patch_before_rootsh
   set_fact:
     patch_before_rootsh: false
   when: olrloc.stat.exists and patch_before_rootsh
 
-- name: gi-opatch | Create patch-base directory (version specific)
+- name: gi_opatch | Create patch-base directory (version specific)
   file:
     dest={{ oracle_patch_stage }}/{{ oracle_install_version_gi }}
     mode=775
@@ -30,14 +30,14 @@
   include: opatch-upgrade.yml
   when: apply_patches_gi
 
-- name: gi-opatch | Check current opatch version
+- name: gi_opatch | Check current opatch version
   oracle_opatch:
     oracle_home={{ oracle_home_gi }}
     state=opatchversion
   register: current_opatch_version
   tags: current_opatch_version
 
-- name: gi-opatch | Configure ocm.rsp (1)
+- name: gi_opatch | Configure ocm.rsp (1)
   template:
     src=ocmrsp.expect.j2
     dest={{ oracle_patch_stage }}/{{ oracle_install_version_gi }}/ocmrsp.expect
@@ -49,7 +49,7 @@
   tags:
     - ocmconfig
 
-- name: gi-opatch | Configure ocm.rsp (2)
+- name: gi_opatch | Configure ocm.rsp (2)
   shell: "{{ oracle_patch_stage }}/{{ oracle_install_version_gi }}/ocmrsp.expect"
   # noqa command-instead-of-shell
   when: apply_patches_gi and current_opatch_version is defined and current_opatch_version.msg is version_compare('12.2.0.1.5', '<')
@@ -59,7 +59,7 @@
   tags:
     - ocmconfig
 
-- name: gi-opatch | Manage opatchauto patches for GI (after software only install)
+- name: gi_opatch | Manage opatchauto patches for GI (after software only install)
   oracle_opatch:
     oracle_home={{ oracle_home_gi }}
     patch_base={{ oracle_patch_install }}/{{ oracle_install_version_gi }}/{{ item.0.path | default (item.0.patchid) }}/{{ item.1 }}
@@ -87,7 +87,7 @@
     - not olrloc.stat.exists
   register: psuapplym
 
-- name: gi-opatch | Manage opatchauto patches for GI
+- name: gi_opatch | Manage opatchauto patches for GI
   oracle_opatch:
     oracle_home={{ oracle_home_gi }}
     patch_base={{ oracle_patch_install }}/{{ oracle_install_version_gi }}/{{ item.path | default (item.patchid) }}/
@@ -113,7 +113,7 @@
     - olrloc.stat.exists
   register: psuapplym
 
-- name: gi-opatch | Manage non opatchauto patches for GI
+- name: gi_opatch | Manage non opatchauto patches for GI
   oracle_opatch:
     oracle_home={{ oracle_home_gi }}
     patch_base={{ oracle_patch_install }}/{{ oracle_install_version_gi }}/{{ item.path | default (item.patchid) }}/
@@ -197,7 +197,7 @@
 #   tags:
 #     - psuapplyo
 #
-# - name: gi-opatch | Check if stuff is running
+# - name: gi_opatch | Check if stuff is running
 #   shell: "{{ oracle_home_gi }}/bin/crsctl stat res -t"
 #   tags:
 #    - crsctl-opatch
@@ -209,7 +209,7 @@
 #    - crsctl-opatch
 #   when: apply_patches_gi
 #
-# - name: gi-opatch | Check opatch lspatches
+# - name: gi_opatch | Check opatch lspatches
 #   shell: "{{ oracle_home_gi }}/OPatch/opatch lsinventory"
 #   become: yes
 #   become_user: "{{ grid_install_user }}"

@@ -1,5 +1,5 @@
 ---
-# tasks file for manage-db
+# tasks file for manage_db
 - include_tasks: assert.yml
   tags:
     always
@@ -12,7 +12,7 @@
   when: tnsnames_installed is defined
   tags: tnsnames2
 
-- name: manage-db | set fact for Listener
+- name: manage_db | set fact for Listener
   set_fact:
     create_listener: "{{ create_listener }}"
   with_items: "{{ oracle_databases }}"
@@ -44,7 +44,7 @@
   when: create_listener and oracle_databases is defined and listener_installed is not defined
   tags: listener
 
-- name: manage-db | Add change-pdb script
+- name: manage_db | Add change-pdb script
   template:
     src: pdb.sql.j2
     dest: "{{ oracle_user_home }}/.Scripts/chpdb.sql"
@@ -62,7 +62,7 @@
   when: oracle_databases is defined
   tags: create_db,dbca,customdbcatemplate,dotprofile_db
 
-- name: manage-db | Check if database is running
+- name: manage_db | Check if database is running
   shell: ps -ef |grep pmon |grep -v grep
   tags:
     - psout

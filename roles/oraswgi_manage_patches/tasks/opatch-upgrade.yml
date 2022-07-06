@@ -1,5 +1,5 @@
 ---
-- name: gi-opatch | Check current opatch version
+- name: gi_opatch | Check current opatch version
   oracle_opatch:
     oracle_home={{ oracle_home_gi }}
     state=opatchversion
@@ -12,14 +12,7 @@
   tags: current_opatch_version
   when: gi_patches is defined and gi_patches[oracle_install_version_gi] is defined and gi_patches[oracle_install_version_gi]['opatch_minversion'] is defined
 
-# - name: gi-opatch | Remove old OPatch
-#   file:
-#       dest="{{ oracle_home_gi }}/OPatch"
-#       state=absent
-#   become: yes
-#   when: apply_patches_gi and (current_opatch_version.msg is version_compare(gi_patches[oracle_install_version_gi]['opatch_minversion'], '<'))
-
-- name: gi-opatch | Extract OPatch to GI Home
+- name: gi_opatch | Extract OPatch to GI Home
   unarchive:
     src={{ oracle_stage }}/{{ item.filename }}
     dest={{ oracle_home_gi }}
@@ -39,7 +32,7 @@
   tags:
     - oragridpatchunpack
 
-- name: gi-opatch | Extract OPatch to GI Home (from remote location)
+- name: gi_opatch | Extract OPatch to GI Home (from remote location)
   unarchive:
     src={{ oracle_stage_remote }}/{{ item.filename }}
     dest={{ oracle_home_gi }}
@@ -59,7 +52,7 @@
   tags:
     - oragridpatchunpack
 
-- name: gi-opatch | Check current opatch version
+- name: gi_opatch | Check current opatch version
   oracle_opatch:
     oracle_home={{ oracle_home_gi }}
     state=opatchversion

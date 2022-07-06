@@ -1,5 +1,5 @@
 ---
-- name: oradb-datapatch | Start listener
+- name: oradb_datapatch | Start listener
   shell: "export PATH=${ORACLE_HOME}/bin:${PATH}; lsnrctl start {{ lsnrinst.listener_name }} /dev/null; exit 0"
   environment: "{{ oracle_env_lsnrctl }}"
   become_user: "{{ oracle_user }}"
@@ -9,7 +9,7 @@
     label: "LISTENER: {{ lsnrinst.listener_name }} ORACLE_HOME: {{ listener_home }}"
   when: listener_installed is defined and lsnrinst.state|lower == 'present'
 
-- name: oradb-datapatch | Start database
+- name: oradb_datapatch | Start database
   oracle_db:
     oracle_home: "{{ oracle_db_home }}"
     db_name: "{{ item.oracle_db_name }}"
@@ -22,7 +22,7 @@
     label: "home: {{ item.home }} db_name: {{ item.oracle_db_name }}"
   tags: startdb
 
-- name: oradb-datapatch | Run datapatch
+- name: oradb_datapatch | Run datapatch
   oracle_datapatch:
     oracle_home: "{{ oracle_db_home }}"
     db_name: "{{ item.oracle_db_name }}"

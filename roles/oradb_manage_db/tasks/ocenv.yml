@@ -1,6 +1,6 @@
 ---
 - block:  # noqa unnamed-task
-    - name: manage-db | create directory dbenv
+    - name: manage_db | create directory dbenv
       file:
         dest: "{{ dbenvdir }}"
         state: directory
@@ -8,7 +8,7 @@
         group: "{{ oracle_group }}"
         mode: '0755'
 
-    - name: manage-db | copy ocenv
+    - name: manage_db | copy ocenv
       copy:
         src: ocenv
         dest: "{{ dbenvdir }}"
@@ -16,7 +16,7 @@
         group: "{{ oracle_group }}"
         mode: '0644'
 
-    - name: manage-db | add ocenv to .bashrc
+    - name: manage_db | add ocenv to .bashrc
       ansible.builtin.lineinfile:
         path: "{{ oracle_user_home }}/.bashrc"
         line: ". {{ dbenvdir }}/ocenv"

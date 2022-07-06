@@ -1,5 +1,5 @@
 ---
-- name: install-home-db | Configure DB instances auto-startup service (init.d)
+- name: install_home_db | Configure DB instances auto-startup service (init.d)
   template: src=dbora.j2 dest=/etc/init.d/dbora owner=root mode=750
   become: true
   when: autostartup_service and hostinitdaemon == "init"
@@ -7,7 +7,7 @@
     - autostartup_service
     - seclimit  # Update
 
-- name: install-home-db | Register dbora service (init.d)
+- name: install_home_db | Register dbora service (init.d)
   command: "chkconfig --add dbora"
   # noqa command-instead-of-module
   become: true

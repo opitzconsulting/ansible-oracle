@@ -1,5 +1,5 @@
 ---
-- name: install-home-db | Transfer oracle installfiles to server (www - get_url)
+- name: install_home_db | Transfer oracle installfiles to server (www - get_url)
   get_url:
     url={{ oracle_sw_source_www }}/{{ item[0].filename }}
     dest={{ oracle_stage }}

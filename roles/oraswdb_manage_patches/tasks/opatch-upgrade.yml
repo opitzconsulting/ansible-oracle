@@ -1,5 +1,5 @@
 ---
-- name: db-opatch | Check current opatch version
+- name: db_opatch | Check current opatch version
   oracle_opatch:
     oracle_home={{ oracle_home_db }}
     state=opatchversion
@@ -12,7 +12,7 @@
   tags: current_opatch_version
   when: current_opatch_version.changed
 
-- name: db-opatch | Extract OPatch to DB Home
+- name: db_opatch | Extract OPatch to DB Home
   unarchive:
     src={{ oracle_stage }}/{{ item.filename }}
     dest={{ oracle_home_db }}
@@ -30,7 +30,7 @@
   tags:
     - oragridpatchunpack
 
-- name: db-opatch | Extract OPatch to DB Home (from remote location)
+- name: db_opatch | Extract OPatch to DB Home (from remote location)
   unarchive:
     src={{ oracle_stage_remote }}/{{ item.filename }}
     dest={{ oracle_home_db }}
@@ -48,7 +48,7 @@
   tags:
     - oragridpatchunpack
 
-- name: db-opatch | Check current opatch version
+- name: db_opatch | Check current opatch version
   oracle_opatch:
     oracle_home={{ oracle_home_db }}
     state=opatchversion

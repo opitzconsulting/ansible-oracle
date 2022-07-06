@@ -1,5 +1,5 @@
 ---
-- name: gi-opatch | Copy oracle GI patch (opatchauto) to server (www)
+- name: gi_opatch | Copy oracle GI patch (opatchauto) to server (www)
   get_url:
     url={{ oracle_sw_source_www }}/{{ item[0].filename }}
     dest={{ oracle_stage }}
@@ -18,7 +18,7 @@
   tags:
     - oragridpatchget
 
-- name: gi-opatch | Copy oracle GI patch (opatchauto) to server (local)
+- name: gi_opatch | Copy oracle GI patch (opatchauto) to server (local)
   copy:
     src={{ oracle_sw_source_local }}/{{ item[0].filename }}
     dest={{ oracle_stage }}
@@ -33,7 +33,7 @@
   tags:
     - oragridpatchpush
 
-- name: gi-opatch | Copy oracle opatch to server (www)
+- name: gi_opatch | Copy oracle opatch to server (www)
   get_url:
     url={{ oracle_sw_source_www }}/{{ item.filename }}
     dest={{ oracle_stage }}
@@ -46,7 +46,7 @@
   tags:
     - oragridopatchget
 
-- name: gi-opatch | Copy oracle opatch to server (local)
+- name: gi_opatch | Copy oracle opatch to server (local)
   copy:
     src={{ oracle_sw_source_local }}/{{ item.filename }}
     dest={{ oracle_stage }}

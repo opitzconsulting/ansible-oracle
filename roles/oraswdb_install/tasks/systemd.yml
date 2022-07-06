@@ -1,5 +1,5 @@
 ---
-- name: install-home-db | Configure oracle-rdbms auto-startup service (systemd.d)
+- name: install_home_db | Configure oracle-rdbms auto-startup service (systemd.d)
   template:
     src=oracle-rdbms-service.j2
     dest=/etc/systemd/system/oracle-rdbms.service

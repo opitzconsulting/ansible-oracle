@@ -1,9 +1,9 @@
 ---
 - block:
-    - debug: msg="install-home-gi | Start Extract files to ORACLE_HOME (gi)"  # noqa unnamed-task
+    - debug: msg="install_home_gi | Start Extract files to ORACLE_HOME (gi)"  # noqa unnamed-task
       run_once: "{{ configure_cluster }}"
 
-    - name: install-home-gi | Extract files to ORACLE_HOME (gi)
+    - name: install_home_gi | Extract files to ORACLE_HOME (gi)
       unarchive: src={{ oracle_gi_image }}  dest={{ oracle_home_gi }} copy=no
       with_items: "{{ oracle_sw_image_gi }}"
       loop_control:
@@ -22,13 +22,13 @@
     - oracle_home_gi not in checkgiinstall.stdout
 
 # Check for an existing GRID_HOME before reinstallation of OPatch
-- name: install-home-gi | Check for file GridSetup.sh
+- name: install_home_gi | Check for file GridSetup.sh
   no_log: true
   stat: path={{ oracle_home_gi }}/gridSetup.sh
   register: stat_gridsetup_result
   run_once: "{{ configure_cluster }}"
 
-- name: install-home-gi | State of GridSetup.sh
+- name: install_home_gi | State of GridSetup.sh
   assert:
     that: "stat_gridsetup_result.stat.exists == True"
     msg: "Cannot find {{ oracle_home_gi }}/gridSetup.sh }}"
@@ -47,7 +47,7 @@
     # synchronize didn't work on all environments...
     # => fetch to ansible controller
     # => copy to nodes
-    - name: install-home-gi | copy cvuqdisk to ansible controller
+    - name: install_home_gi | copy cvuqdisk to ansible controller
       fetch:
         src: "{{ oracle_home_gi }}/cv/rpm/{{ cvuqdisk_rpm }}"
         dest: /tmp
@@ -57,14 +57,14 @@
         - statcvuqdisk.stat.exists
       tags: cvuqdisk
 
-    - name: install-home-gi | copy cvuqdisk to cluster nodes
+    - name: install_home_gi | copy cvuqdisk to cluster nodes
       copy:
         src: "/tmp/{{ cluster_master  }}/{{ oracle_home_gi }}/cv/rpm/{{ cvuqdisk_rpm }}"
         dest: "{{ oracle_rsp_stage }}/{{ cvuqdisk_rpm }}"
         mode: 0644
       tags: cvuqdisk
 
-    - name: install-home-gi | Install cvuqdisk rpm
+    - name: install_home_gi | Install cvuqdisk rpm
       yum:
         name: "{{ oracle_rsp_stage }}/{{ cvuqdisk_rpm }}"
         state: present
@@ -76,7 +76,7 @@
     - hostvars[cluster_master]['statcvuqdisk']['stat']['exists']
   tags: cvuqdisk
 
-- name: install-home-gi | Setup response file for install (GI)
+- name: install_home_gi | Setup response file for install (GI)
   template:
     src=grid-install.rsp.{{ oracle_install_version_gi }}.j2
     dest={{ oracle_rsp_stage }}/{{ oracle_grid_responsefile }}
@@ -100,10 +100,10 @@
         - force_runcluvfy | default(false) or oracle_home_gi not in checkgiinstall.stdout
       tags: always
 
-    - debug: msg="install-home-gi | Start Install Grid Infrastructure"  # noqa unnamed-task
+    - debug: msg="install_home_gi | Start Install Grid Infrastructure"  # noqa unnamed-task
       run_once: true
 
-    - name: install-home-gi | Install Grid Infrastructure
+    - name: install_home_gi | Install Grid Infrastructure
       command:
         # noqa no-changed-when
         argv:
@@ -127,23 +127,23 @@
 
   when: oracle_home_gi not in checkgiinstall.stdout
 
-- name: install-home-gi | include role oraswgi_manage_patches
+- name: install_home_gi | include role oraswgi_manage_patches
   include_role:
     name: oraswgi_manage_patches
   when: patch_before_rootsh and apply_patches_gi
 
 - block:  # when: oracle_home_gi not in checkgiinstall.stdout
-    - name: install-home-gi | Run oraInstroot script after installation
+    - name: install_home_gi | Run oraInstroot script after installation
       command: "{{ oracle_inventory_loc }}/orainstRoot.sh"
       # noqa no-changed-when
       become: true
       tags:
         - runroot
 
-    - debug: msg="install-home-gi | Start Run root script after installation (Master Node)"  # noqa unnamed-task
+    - debug: msg="install_home_gi | Start Run root script after installation (Master Node)"  # noqa unnamed-task
       run_once: true
 
-    - name: install-home-gi | Run root script after installation (Master Node)
+    - name: install_home_gi | Run root script after installation (Master Node)
       command: "{{ oracle_home_gi }}/root.sh"
       # noqa no-changed-when
       become: true
@@ -156,12 +156,12 @@
       run_once: "{{ configure_cluster }}"
       when: rootmaster.stdout_lines is defined
 
-    - debug: msg="install-home-gi | Start Run root script after installation (Other Nodes)"  # noqa unnamed-task
+    - debug: msg="install_home_gi | Start Run root script after installation (Other Nodes)"  # noqa unnamed-task
       run_once: true
 
     # do not start root.sh on all nodes in parallel
     # => sleep
-    - name: install-home-gi | Run root script after installation (Other Nodes)
+    - name: install_home_gi | Run root script after installation (Other Nodes)
       script: |
         /usr/bin/sleep {{ item.0 * 60 }}
         {{ oracle_home_gi }}/root.sh
@@ -178,7 +178,7 @@
     - debug: var=rootother.stdout_lines  # noqa unnamed-task
       when: rootother.stdout_lines is defined
 
-    - name: install-home-gi | Execute ConfigTools
+    - name: install_home_gi | Execute ConfigTools
       command: "{{ oracle_home_gi }}/gridSetup.sh -executeConfigTools -responseFile {{ oracle_rsp_stage }}/{{ oracle_grid_responsefile }} -silent"
       become: true
       become_user: "{{ grid_install_user }}"

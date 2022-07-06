@@ -1,5 +1,5 @@
 ---
-- name: install-home-db | Install Oracle Database Server
+- name: install_home_db | Install Oracle Database Server
   shell: "{{ oracle_stage_install }}/{{ db_homes_config[dbh.home]['version'] }}/database/runInstaller -responseFile {{ oracle_rsp_stage }}/{{ oracle_db_responsefile }} -ignorePrereq -ignoreSysPrereqs -silent -waitforcompletion"
   # noqa yaml command-instead-of-shell
   become: true

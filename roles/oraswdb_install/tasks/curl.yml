@@ -1,5 +1,5 @@
 ---
-- name: install-home-db | Transfer oracle installfiles to server (www - curl)
+- name: install_home_db | Transfer oracle installfiles to server (www - curl)
   # get_url: url={{ oracle_sw_source_www }}/{{ item[0].filename }} dest={{ oracle_stage }} mode=0775 force=no
   shell: "curl -o {{ oracle_stage }}/{{ item[0].filename }} {{ oracle_sw_source_www }}/{{ item[0].filename }}"
   # noqa command-instead-of-shell command-instead-of-module

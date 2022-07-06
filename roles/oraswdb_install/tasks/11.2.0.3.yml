@@ -1,5 +1,5 @@
 ---
-- name: install-home-db | Extract files to stage-area
+- name: install_home_db | Extract files to stage-area
   unarchive:
     src={{ oracle_stage }}/{{ item[0].filename }}
     dest={{ oracle_stage }}/{{ item[0].version }}
@@ -19,7 +19,7 @@
   tags:
     - oradbswunpack
 
-- name: install-home-db | Extract files to stage-area (from remote location)
+- name: install_home_db | Extract files to stage-area (from remote location)
   unarchive:
     src={{ oracle_stage_remote }}/{{ item[0].filename }}
     dest={{ oracle_stage }}/{{ item[0].version }}
@@ -35,7 +35,7 @@
   tags:
     - oradbswunpack
 
-- name: install-home-db | Install Oracle Database Server
+- name: install_home_db | Install Oracle Database Server
   shell: "{{ oracle_stage_install }}/{{ db_homes_config[dbh.home]['version'] }}/database/runInstaller -responseFile {{ oracle_rsp_stage }}/{{ oracle_db_responsefile }} -ignorePrereq -ignoreSysPrereqs -silent -waitforcompletion"
   # noqa yaml command-instead-of-shell
   become: true

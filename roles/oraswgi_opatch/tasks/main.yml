@@ -99,22 +99,6 @@
   tags:
     - oragridnewopatch
 
-# - name: Configure ocm.rsp (1)
-#   template: src=ocmrsp.expect.j2  dest={{ oracle_psu_stage }}/{{ oracle_install_version_gi }}/ocmrsp.expect mode=0777 force=yes
-#   when: oracle_psu_apply_gi #and not {{ item.1.stdout }} != 0
-#   become: yes
-#   become_user: "{{ grid_install_user }}"
-#   tags:
-#     - ocmconfig
-#
-# - name: Configure ocm.rsp (2)
-#   shell: "{{ oracle_psu_stage }}/{{ oracle_install_version_gi }}/ocmrsp.expect"
-#   when: oracle_psu_apply_gi #and not {{ item.1.stdout }} != 0
-#   become: yes
-#   become_user: "{{ grid_install_user }}"
-#   tags:
-#     - ocmconfig
-
 - name: Apply PSU to GI (v12.x) (Master node)
   shell: "{{ oracle_home_gi }}/OPatch/opatchauto apply {{ oracle_psu_stage }}/{{ oracle_install_version_gi }}/{{ item.0.patchid }} -oh {{ oracle_home_gi }}"  # -ocmrf {{ oracle_psu_stage }}/{{ oracle_install_version_gi }}/ocm.rsp "
   # noqa yaml command-instead-of-shell

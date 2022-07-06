@@ -1,5 +1,5 @@
 ---
-- name: db-opatch | Extract opatchauto patch files to patch base
+- name: db_opatch | Extract opatchauto patch files to patch base
   unarchive:
     src={{ oracle_stage }}/{{ item[0].filename }}
     dest={{ oracle_patch_stage }}/{{ db_version }}
@@ -19,7 +19,7 @@
   tags:
     - oraswdbpsuunpack1
 
-- name: db-opatch | Extract opatchauto patch files to patch base (from remote location)
+- name: db_opatch | Extract opatchauto patch files to patch base (from remote location)
   unarchive:
     src={{ oracle_stage_remote }}/{{ item[0].filename }}
     dest={{ oracle_patch_stage }}/{{ db_version }}
@@ -41,7 +41,7 @@
   tags:
     - oraswdbpsuunpack2
 
-- name: db-opatch | Extract one-off patch files to patch base
+- name: db_opatch | Extract one-off patch files to patch base
   unarchive:
     src={{ oracle_stage }}/{{ item[0].filename }}
     dest={{ oracle_patch_stage }}/{{ db_version }}
@@ -62,7 +62,7 @@
   tags:
     - oraswdbpsuunpack1
 
-- name: db-opatch | Extract one-off patch files to patch base (from remote location)
+- name: db_opatch | Extract one-off patch files to patch base (from remote location)
   unarchive:
     src={{ oracle_stage_remote }}/{{ item[0].filename }}
     dest={{ oracle_patch_stage }}/{{ db_version }}

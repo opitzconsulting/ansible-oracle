@@ -1,7 +1,7 @@
 ---
 # tasks file for asm-diskgroups
 
-- name: oraasm-manage-dgs | Manage diskgroups
+- name: oraasm_manage_diskgroups | Manage diskgroups
   oracle_asmdg:
     un=sys
     pw={{ sysasmpassword }}
