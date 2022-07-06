@@ -1,7 +1,7 @@
 ---
 # check for minimum configured atrributes in oracle_databases
 - name: assert oracle_databases
-  assert:
+  ansible.builtin.assert:
     quiet: true
     that:
       - dbh.oracle_db_name is defined

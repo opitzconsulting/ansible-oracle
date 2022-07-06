@@ -1,7 +1,7 @@
 ---
 - block:
 
-    - debug: msg="install_home_gi | Sttart Execute runcluvfy.sh for Grid-Infrastructure"  # noqa unnamed-task
+    - ansible.builtin.debug: msg="install_home_gi | Sttart Execute runcluvfy.sh for Grid-Infrastructure"  # noqa unnamed-task
       run_once: true
       when:
         - configure_cluster
@@ -12,7 +12,7 @@
     # => Golden-Image with 19.11+ is mandatory for installation
     # => We do NOT look into the archive
     - name: assert that OL8 is using Golden-Image during unzip
-      assert:
+      ansible.builtin.assert:
         that: oracle_install_image_gi is defined
       when:
         - ansible_os_family == 'RedHat'
@@ -20,7 +20,7 @@
         - oracle_install_version_gi == "19.3.0.0"
 
     - name: install_home_gi | Execute runcluvfy.sh for Grid-Infrastructure
-      command:
+      ansible.builtin.command:
         argv:
           - "{{ oracle_home_gi }}/runcluvfy.sh"
           - stage
@@ -37,11 +37,11 @@
       when:
         - configure_cluster
 
-    - debug: var=cmdruncluvfygi.stdout_lines  # noqa unnamed-task
+    - ansible.builtin.debug: var=cmdruncluvfygi.stdout_lines  # noqa unnamed-task
       when: cmdruncluvfygi.stdout_lines is defined
 
     - name: install_home_gi | runcluvfy.sh failed
-      fail:
+      ansible.builtin.fail:
         msg: "runcluvfy.sh failed - aborting Playbook rc={{ cmdruncluvfygi.rc }}"
       when:
         - cmdruncluvfygi.rc is defined
@@ -49,7 +49,7 @@
         - not gi_ignoreprereq | bool
 
     - name: install_home_gi | Execute runcluvfy.sh for Oracle Restart
-      command:
+      ansible.builtin.command:
         argv:
           - "{{ oracle_home_gi }}/runcluvfy.sh"
           - comp
@@ -66,11 +66,11 @@
       when:
         - not configure_cluster
 
-    - debug: var=cmdruncluvfy.stdout_lines  # noqa unnamed-task
+    - ansible.builtin.debug: var=cmdruncluvfy.stdout_lines  # noqa unnamed-task
       when: cmdruncluvfy.stdout_lines is defined
 
     - name: install_home_gi | runcluvfy.sh failed
-      fail:
+      ansible.builtin.fail:
         msg: "runcluvfy.sh failed - aborting Playbook rc={{ cmdruncluvfy.rc }}"
       when:
         - cmdruncluvfy.rc is defined
@@ -79,7 +79,7 @@
 
     # Oracle GI/Restart: Configuration will fail when hostname points to localhost ip!
     - name: Check for hostname with localhost ip in hosts
-      lineinfile:
+      ansible.builtin.lineinfile:
         name: /etc/hosts
         regexp: "127.0.[0-1].1 .*{{ ansible_hostname }}.*"
         state: absent

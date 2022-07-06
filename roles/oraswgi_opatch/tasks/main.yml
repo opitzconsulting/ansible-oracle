@@ -1,7 +1,7 @@
 ---
 
 - name: Check which GI patches are applied
-  shell: "{{ oracle_home_gi }}/OPatch/opatch lspatches -oh {{ oracle_home_gi }}  |grep  {{ item.patchversion }} |wc -l"
+  ansible.builtin.shell: "{{ oracle_home_gi }}/OPatch/opatch lspatches -oh {{ oracle_home_gi }}  |grep  {{ item.patchversion }} |wc -l"
   # noqa risky-shell-pipe
   become: true
   become_user: "{{ grid_install_user }}"
@@ -12,7 +12,7 @@
 
 
 - name: Create stage directory
-  file: dest={{ oracle_psu_stage }}/{{ oracle_install_version_gi }} mode=775 owner={{ grid_install_user }} group={{ oracle_group }} state=directory
+  ansible.builtin.file: dest={{ oracle_psu_stage }}/{{ oracle_install_version_gi }} mode=775 owner={{ grid_install_user }} group={{ oracle_group }} state=directory
   # file: dest={{ oracle_psu_stage }}/{{ oracle_install_version_gi }} mode=775 owner=grid group={{ oracle_group }} state=directory
   tags:
     - directoriespsu
@@ -40,7 +40,7 @@
 
 
 - name: Extract OPatch to stage-area
-  unarchive: src={{ oracle_stage }}/{{ item.filename }}  dest={{ oracle_psu_stage }}/{{ oracle_install_version_gi }} copy=no
+  ansible.builtin.unarchive: src={{ oracle_stage }}/{{ item.filename }}  dest={{ oracle_psu_stage }}/{{ oracle_install_version_gi }} copy=no
   become: true
   become_user: "{{ grid_install_user }}"
   with_items: "{{ oracle_opatch_patch }}"
@@ -49,7 +49,7 @@
     - oragridpatchunpack
 
 - name: Extract Opatch to stage-area (from remote location)
-  unarchive: src={{ oracle_stage_remote }}/{{ item.filename }}  dest={{ oracle_psu_stage }}/{{ oracle_install_version_gi }} copy=no
+  ansible.builtin.unarchive: src={{ oracle_stage_remote }}/{{ item.filename }}  dest={{ oracle_psu_stage }}/{{ oracle_install_version_gi }} copy=no
   with_items: "{{ oracle_opatch_patch }}"
   become: true
   become_user: "{{ grid_install_user }}"
@@ -59,7 +59,7 @@
 
 
 - name: Extract GI psu files to stage-area
-  unarchive: src={{ oracle_stage }}/{{ item.0.filename }}  dest={{ oracle_psu_stage }}/{{ oracle_install_version_gi }} copy=no
+  ansible.builtin.unarchive: src={{ oracle_stage }}/{{ item.0.filename }}  dest={{ oracle_psu_stage }}/{{ oracle_install_version_gi }} copy=no
   become: true
   become_user: "{{ grid_install_user }}"
   with_together:
@@ -70,7 +70,7 @@
     - oragridpsuunpack
 
 - name: Extract GI psu files to stage-area (from remote location)
-  unarchive: src={{ oracle_stage_remote }}/{{ item.0.filename }}  dest={{ oracle_psu_stage }}/{{ oracle_install_version_gi }} copy=no
+  ansible.builtin.unarchive: src={{ oracle_stage_remote }}/{{ item.0.filename }}  dest={{ oracle_psu_stage }}/{{ oracle_install_version_gi }} copy=no
   become: true
   become_user: "{{ grid_install_user }}"
   with_together:
@@ -93,14 +93,14 @@
 #    when: checkgiinstall.stdout != "1" and "{{ oracle_install_version_gi }}" == "{{ item.version }}" and not oracle_sw_copy and oracle_sw_unpack
 
 - name: Distribute latest opatch
-  shell: rm -rf {{ oracle_home_gi }}/OPatch; cp -Rvp {{ oracle_psu_stage }}/{{ oracle_install_version_gi }}/OPatch {{ oracle_home_gi }}; chown -R {{ grid_install_user }}:{{ oracle_group }} {{ oracle_home_gi }}/OPatch
+  ansible.builtin.shell: rm -rf {{ oracle_home_gi }}/OPatch; cp -Rvp {{ oracle_psu_stage }}/{{ oracle_install_version_gi }}/OPatch {{ oracle_home_gi }}; chown -R {{ grid_install_user }}:{{ oracle_group }} {{ oracle_home_gi }}/OPatch
   # noqa yaml deprecated-command-syntax
   when: oracle_psu_apply_gi
   tags:
     - oragridnewopatch
 
 - name: Apply PSU to GI (v12.x) (Master node)
-  shell: "{{ oracle_home_gi }}/OPatch/opatchauto apply {{ oracle_psu_stage }}/{{ oracle_install_version_gi }}/{{ item.0.patchid }} -oh {{ oracle_home_gi }}"  # -ocmrf {{ oracle_psu_stage }}/{{ oracle_install_version_gi }}/ocm.rsp "
+  ansible.builtin.shell: "{{ oracle_home_gi }}/OPatch/opatchauto apply {{ oracle_psu_stage }}/{{ oracle_install_version_gi }}/{{ item.0.patchid }} -oh {{ oracle_home_gi }}"  # -ocmrf {{ oracle_psu_stage }}/{{ oracle_install_version_gi }}/ocm.rsp "
   # noqa yaml command-instead-of-shell
   with_together:
     - "{{ oracle_sw_patches }}"
@@ -116,7 +116,7 @@
 
 
 - name: Apply PSU to GI (v11.2) (Master node)
-  shell: "{{ oracle_home_gi }}/OPatch/opatch auto {{ oracle_psu_stage }}/{{ oracle_install_version_gi }}/{{ item.0.patchid }} -oh {{ oracle_home_gi }} -ocmrf {{ oracle_psu_stage }}/{{ oracle_install_version_gi }}/ocm.rsp "
+  ansible.builtin.shell: "{{ oracle_home_gi }}/OPatch/opatch auto {{ oracle_psu_stage }}/{{ oracle_install_version_gi }}/{{ item.0.patchid }} -oh {{ oracle_home_gi }} -ocmrf {{ oracle_psu_stage }}/{{ oracle_install_version_gi }}/ocm.rsp "
   # noqa yaml command-instead-of-shell
   with_together:
     - "{{ oracle_sw_patches }}"
@@ -126,7 +126,7 @@
   when: oracle_psu_apply_gi and '11.2' in oracle_install_version_gi and item.0.version == oracle_install_version_gi and not item.1.stdout != 0
   register: psuapplym
 
-- debug: var=psuapplym.stdout_lines
+- ansible.builtin.debug: var=psuapplym.stdout_lines
   # noqa unnamed-task
   run_once: "{{ configure_cluster }}"
   when: oracle_psu_apply_gi
@@ -134,7 +134,7 @@
     - psuapplym
 
 - name: Check if stuff is running
-  shell: "{{ oracle_home_gi }}/bin/crsctl stat res -t"
+  ansible.builtin.shell: "{{ oracle_home_gi }}/bin/crsctl stat res -t"
   # noqa command-instead-of-shell
   run_once: "{{ configure_cluster }}"
   tags:
@@ -142,7 +142,7 @@
   register: crsctl
   when: oracle_psu_apply_gi  # and not {{ item.1.stdout }} != 0
 
-- debug: var=crsctl.stdout_lines
+- ansible.builtin.debug: var=crsctl.stdout_lines
   # noqa unnamed-task
   tags:
     - crsctl
@@ -150,7 +150,7 @@
   # when: master_node
 
 - name: Apply PSU to GI (v12.1) (other nodes)
-  shell: "{{ oracle_home_gi }}/OPatch/opatchauto apply {{ oracle_psu_stage }}/{{ oracle_install_version_gi }}/{{ item.0.patchid }} -oh {{ oracle_home_gi }} -ocmrf {{ oracle_psu_stage }}/{{ oracle_install_version_gi }}/ocm.rsp "
+  ansible.builtin.shell: "{{ oracle_home_gi }}/OPatch/opatchauto apply {{ oracle_psu_stage }}/{{ oracle_install_version_gi }}/{{ item.0.patchid }} -oh {{ oracle_home_gi }} -ocmrf {{ oracle_psu_stage }}/{{ oracle_install_version_gi }}/ocm.rsp "
   # noqa yaml command-instead-of-shell
   with_together:
     - "{{ oracle_sw_patches }}"
@@ -167,7 +167,7 @@
   register: psuapplyo
 
 - name: Apply PSU to GI (v11.2) (other nodes)
-  shell: "{{ oracle_home_gi }}/OPatch/opatch auto {{ oracle_psu_stage }}/{{ oracle_install_version_gi }}/{{ item.0.patchid }} -oh {{ oracle_home_gi }} -ocmrf {{ oracle_psu_stage }}/{{ oracle_install_version_gi }}/ocm.rsp "
+  ansible.builtin.shell: "{{ oracle_home_gi }}/OPatch/opatch auto {{ oracle_psu_stage }}/{{ oracle_install_version_gi }}/{{ item.0.patchid }} -oh {{ oracle_home_gi }} -ocmrf {{ oracle_psu_stage }}/{{ oracle_install_version_gi }}/ocm.rsp "
   # noqa yaml command-instead-of-shell
   with_together:
     - "{{ oracle_sw_patches }}"
@@ -182,28 +182,28 @@
     - not item.1.stdout != 0
   register: psuapplyo
 
-- debug: var=psuapplyo.stdout_lines
+- ansible.builtin.debug: var=psuapplyo.stdout_lines
   # noqa unnamed-task
   when: configure_cluster and inventory_hostname != cluster_master and oracle_psu_apply_gi and psuapplyo is defined
   tags:
     - psuapplyo
 
 - name: Check if stuff is running
-  shell: "{{ oracle_home_gi }}/bin/crsctl stat res -t"
+  ansible.builtin.shell: "{{ oracle_home_gi }}/bin/crsctl stat res -t"
   # noqa yaml command-instead-of-shell
   tags:
     - crsctl-opatch
   register: crsctl
   when: oracle_psu_apply_gi
 
-- debug: var=crsctl.stdout_lines
+- ansible.builtin.debug: var=crsctl.stdout_lines
   # noqa unnamed-task
   tags:
     - crsctl-opatch
   when: oracle_psu_apply_gi
 
 - name: Check opatch lsinventory
-  shell: "{{ oracle_home_gi }}/OPatch/opatch lsinventory"
+  ansible.builtin.shell: "{{ oracle_home_gi }}/OPatch/opatch lsinventory"
   # noqa yaml command-instead-of-shell
   become: true
   become_user: "{{ grid_install_user }}"
@@ -212,7 +212,7 @@
   tags:
     - opatchls
 
-- debug: var=opatchls.stdout_lines
+- ansible.builtin.debug: var=opatchls.stdout_lines
   # noqa unnamed-task
   when: oracle_psu_apply_gi
   tags:

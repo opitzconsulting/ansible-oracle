@@ -2,7 +2,7 @@
 # tasks file for asm-diskgroups
 
 - name: oraasm_manage_diskgroups | Manage diskgroups
-  oracle_asmdg:
+  ansible.builtin.oracle_asmdg:
     un=sys
     pw={{ sysasmpassword }}
     sn=+ASM

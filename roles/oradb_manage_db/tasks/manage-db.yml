@@ -1,25 +1,25 @@
 ---
 - name: manage_db | check if GI is present
-  stat: path=/etc/oracle/olr.loc
+  ansible.builtin.stat: path=/etc/oracle/olr.loc
   register: olrloc
   tags: update_oratab
 
 - name: manage_db | set fact with ORACLE_HOME
-  set_fact:
+  ansible.builtin.set_fact:
     oracle_home_db: "{%- if db_homes_config[dbh.home]['oracle_home'] is defined  -%}
                         {{ db_homes_config[dbh.home]['oracle_home'] }}
                     {%- else -%}
                           {{ oracle_base }}/{{ db_homes_config[dbh.home]['version'] }}/{{ db_homes_config[dbh.home]['home'] }}
                     {%- endif -%}"
 
-- debug: msg="Maintaining DB - {{ dbh.oracle_db_name }}, ORACLE_HOME - {{ oracle_home_db }}"  # noqa unnamed-task
+- ansible.builtin.debug: msg="Maintaining DB - {{ dbh.oracle_db_name }}, ORACLE_HOME - {{ oracle_home_db }}"  # noqa unnamed-task
   run_once: "{{ configure_cluster }}"
   when: dbh.state|lower == 'present'
 
 # dbca_copy_template is for special situations, when using DBCA-templates
 # without executing a template task before.
 - name: manage_db | Copy custom dbca Templates for Database to ORACLE_HOME/assistants/dbca/templates
-  template:
+  ansible.builtin.template:
     src={{ dbh.dbca_templatename }}
     dest={{ oracle_home_db }}/assistants/dbca/templates/{{ dbh.oracle_db_name }}_{{ dbh.dbca_templatename }}
     owner={{ oracle_user }}
@@ -35,7 +35,7 @@
     - dbcatemplate
 
 - name: manage_db | Prepare installation template
-  template:
+  ansible.builtin.template:
     src: "dbca-create-db.rsp.{{ db_version }}.j2"
     dest: "{{ oracle_rsp_stage }}/{{ oracle_dbca_rsp }}"
     owner: "{{ oracle_user }}"
@@ -46,7 +46,7 @@
   tags: create_db,dbcatemplate
 
 - name: manage_db | create/manage database
-  oracle_db:
+  opitzconsulting.ansible_oracle.oracle_db:
     oracle_home: "{{ oracle_home_db }}"
     port: "{{ listener_port_template }}"
     sys_password: "{{ dbca_sys_pass }}"
@@ -67,7 +67,7 @@
   tags: create_db,manage_db,dbca
 
 - name: manage_db | Customize oratab for autostart
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest=/etc/oratab
     line="{{ dbh.oracle_db_instance_name | default(dbh.oracle_db_name) }}:{{ oracle_home_db }}:Y"
     state=present
@@ -75,7 +75,7 @@
   tags: update_oratab
 
 - name: manage_db | Customize oratab for autostart
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest=/etc/oratab
     line="{{ dbh.oracle_db_instance_name | default(dbh.oracle_db_name) }}:{{ oracle_home_db }}:N"
     state=absent
@@ -83,12 +83,12 @@
   become: true
   tags: update_oratab
 
-- debug: msg="Removing DB - {{ dbh.oracle_db_name }}, ORACLE_HOME - {{ oracle_home_db }}"  # noqa unnamed-task
+- ansible.builtin.debug: msg="Removing DB - {{ dbh.oracle_db_name }}, ORACLE_HOME - {{ oracle_home_db }}"  # noqa unnamed-task
   run_once: "{{ configure_cluster }}"
   when: dbh.state|lower == 'absent'
 
 - name: manage_db | remove database
-  oracle_db:
+  opitzconsulting.ansible_oracle.oracle_db:
     oracle_home={{ oracle_home_db }}
     port={{ listener_port_template }}
     sys_password={{ dbca_sys_pass }}
@@ -101,11 +101,11 @@
   register: dbca_remove
   tags: remove_db,dbca
 
-- debug: var=dbca_remove.stdout_lines  # noqa unnamed-task no-handler
+- ansible.builtin.debug: var=dbca_remove.stdout_lines  # noqa unnamed-task no-handler
   when: dbca_remove.changed
 
 - name: manage_db | remove dotprofile
-  file:
+  ansible.builtin.file:
     path: "{{ oracle_user_home }}/.profile_{{ dbh.oracle_db_name }}"
     state: absent
   when: dbh.state|lower == 'absent'

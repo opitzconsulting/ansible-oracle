@@ -13,7 +13,7 @@
   tags: tnsnames2
 
 - name: manage_db | set fact for Listener
-  set_fact:
+  ansible.builtin.set_fact:
     create_listener: "{{ create_listener }}"
   with_items: "{{ oracle_databases }}"
   loop_control:
@@ -45,7 +45,7 @@
   tags: listener
 
 - name: manage_db | Add change-pdb script
-  template:
+  ansible.builtin.template:
     src: pdb.sql.j2
     dest: "{{ oracle_user_home }}/.Scripts/chpdb.sql"
     owner: "{{ oracle_user }}"
@@ -63,7 +63,7 @@
   tags: create_db,dbca,customdbcatemplate,dotprofile_db
 
 - name: manage_db | Check if database is running
-  shell: ps -ef |grep pmon |grep -v grep
+  ansible.builtin.shell: ps -ef |grep pmon |grep -v grep
   tags:
     - psout
   register: psout
@@ -71,7 +71,7 @@
   failed_when: false
   ignore_errors: true
 
-- debug: var=psout.stdout_lines  # noqa unnamed-task
+- ansible.builtin.debug: var=psout.stdout_lines  # noqa unnamed-task
   changed_when: false
   failed_when: false
   when: psout is defined
