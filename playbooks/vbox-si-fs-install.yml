@@ -13,35 +13,35 @@
   user: vagrant
   become: true
   roles:
-    - oraswdb-install
+    - oraswdb_install
     - cxoracle
-    - {role: oraswdb-manage-patches, when: apply_patches_db}
-    - oradb-manage-db
+    - {role: oraswdb_manage_patches, when: apply_patches_db}
+    - oradb_manage_db
 
 - name: Configure Logrotate
   hosts: vbox-si-fs
   user: vagrant
   become: true
   roles:
-    - orahost-logrotate
+    - orahost_logrotate
 
 - name: Customize database(s)
   hosts: vbox-si-fs
   user: vagrant
   become: true
   roles:
-    - oradb-manage-pdb
-    - oradb-manage-tablespace
-    - oradb-manage-parameters
-    - oradb-manage-redo
-    - oradb-manage-roles
-    - oradb-manage-users
-    - oradb-manage-grants
-    - oradb-manage-services
+    - oradb_manage_pdb
+    - oradb_manage_tablespace
+    - oradb_manage_parameters
+    - oradb_manage_redo
+    - oradb_manage_roles
+    - oradb_manage_users
+    - oradb_manage_grants
+    - oradb_manage_services
 
 - name: Run Datapatch
   hosts: vbox-si-fs
   user: vagrant
   become: true
   roles:
-    - {role: oradb-datapatch, when: apply_patches_db}
+    - {role: oradb_datapatch, when: apply_patches_db}

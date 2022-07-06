@@ -7,7 +7,7 @@
   roles:
     - common
     - orahost
-    - orahost-storage
+    - orahost_storage
 
 - name: ssh configuration
   hosts: vbox-rac-dc1
@@ -15,23 +15,23 @@
   become: true
   serial: 1
   roles:
-    - {role: orahost-ssh, when: configure_cluster and not old_ssh_config}
+    - {role: orahost_ssh, when: configure_cluster and not old_ssh_config}
 
 - name: Oracle Grid Infrastructure installation & ASM Configuration
   hosts: orarac-dc1
   user: ansible
   become: true
   roles:
-    - oraswgi-install
-    - oraasm-createdg
+    - oraswgi_install
+    - oraasm_createdg
 
 - name: Database Server Installation & Database Creation
   hosts: orarac-dc1
   user: ansible
   become: true
   roles:
-    - oraswdb-install
-    - oradb-create
+    - oraswdb_install
+    - oradb_create
 
 - name: Tweaks
   hosts: orarac-dc1
@@ -39,4 +39,4 @@
   become: true
   roles:
     - cxoracle
-    - orahost-logrotate
+    - orahost_logrotate

@@ -12,7 +12,7 @@
   become: true
   serial: 1
   roles:
-    - {role: orahost-ssh, when: configure_cluster and not old_ssh_config}
+    - {role: orahost_ssh, when: configure_cluster and not old_ssh_config}
 
 - name: Storage Configuration
   hosts: vbox-rac-hub
@@ -26,16 +26,16 @@
   user: vagrant
   become: true
   roles:
-    - oraswgi-install
+    - oraswgi_install
 
 - name: ASM Configuration, Database Server Installation & Database Creation
   hosts: vbox-rac-hub
   user: vagrant
   become: true
   roles:
-    - oraasm-createdg
-    - oraswdb-install
-    - oradb-manage-db
+    - oraasm_createdg
+    - oraswdb_install
+    - oradb_manage_db
 
 - name: Install cx_oracle
   hosts: vbox-rac-hub
@@ -49,4 +49,4 @@
   user: vagrant
   become: true
   roles:
-    - orahost-logrotate
+    - orahost_logrotate

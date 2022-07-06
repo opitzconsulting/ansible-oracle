@@ -1,0 +1,10 @@
+---
+namespace: opitz
+name: ansible_oracle
+version: 3.0.0
+readme: README.md
+authors:
+  - Mikael Sandström
+  - OPITZ CONSULTING
+tags:
+  - oracle

@@ -12,20 +12,20 @@
   user: ansible
   become: true
   roles:
-    - orahost-storage
+    - orahost_storage
 
 - name: Oracle Grid Infrastructure installation
   hosts: orarac-flex
   user: ansible
   become: true
   roles:
-    - oraswgi-install
+    - oraswgi_install
 
 - name: ASM Configuration, Database Server Installation & Database Creation
   hosts: orarac-flex-hub
   user: ansible
   become: true
   roles:
-    - oraasm-createdg
-    - oraswdb-install
-    - oradb-create
+    - oraasm_createdg
+    - oraswdb_install
+    - oradb_create

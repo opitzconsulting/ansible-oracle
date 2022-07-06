@@ -4,10 +4,10 @@
   become: true
   serial: 1
   roles:
-    - {role: oraswdb-manage-patches}
+    - {role: oraswdb_manage_patches}
 
 - name: Run datapatch
   hosts: "{{ hostgroup | default('all') }}"
   become: true
   roles:
-    - {role: oradb-datapatch}
+    - {role: oradb_datapatch}

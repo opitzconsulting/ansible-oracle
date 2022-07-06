@@ -13,5 +13,5 @@
   hosts: "{{ hostgroup }}"
   become: true
   roles:
-    - oraswdb-install
-    - oradb-manage-db
+    - oraswdb_install
+    - oradb_manage_db

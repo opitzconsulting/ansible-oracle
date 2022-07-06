@@ -9,7 +9,7 @@
   roles:
     - common
     - orahost
-    - orahost-storage
+    - orahost_storage
 
 - name: Oracle Grid Infrastructure installation & ASM Configuration
   hosts: aws-si-asm
@@ -17,8 +17,8 @@
   user: ec2-user
   become: true
   roles:
-    - oraswgi-install
-    - oraasm-createdg
+    - oraswgi_install
+    - oraasm_createdg
 
 - name: Database Server Installation & Database Creation
   hosts: aws-si-asm
@@ -26,8 +26,8 @@
   user: ec2-user
   become: true
   roles:
-    - oraswdb-install
-    - oradb-manage-db
+    - oraswdb_install
+    - oradb_manage_db
 
 - name: Install cx_oracle
   hosts: aws-si-asm
@@ -43,4 +43,4 @@
   user: ec2-user
   become: true
   roles:
-    - orahost-logrotate
+    - orahost_logrotate

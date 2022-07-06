@@ -4,4 +4,4 @@
   become: true
   serial: 1
   roles:
-    - {role: oraswgi-manage-patches}
+    - {role: oraswgi_manage_patches}
