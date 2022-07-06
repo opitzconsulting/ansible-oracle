@@ -116,9 +116,9 @@
     - glogingi
   when: oracle_home_gi not in checkgiinstall.stdout
 
-- name: include_role oraswgi-manage-patches
+- name: include_role oraswgi_manage_patches
   include_role:
-    name: oraswgi-manage-patches
+    name: oraswgi_manage_patches
   when:
     - not patch_before_rootsh
     - apply_patches_gi

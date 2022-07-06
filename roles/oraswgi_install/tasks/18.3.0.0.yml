@@ -112,7 +112,7 @@
 
 - include_role:
     # noqa unnamed-task
-    name: oraswgi-manage-patches
+    name: oraswgi_manage_patches
   when: patch_before_rootsh and apply_patches_gi
 
 - name: install-home-gi | Run oraInstroot script after installation
