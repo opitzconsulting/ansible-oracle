@@ -88,7 +88,7 @@
 
 - ansible.builtin.include_tasks: "{{ db_version }}.yml"
 
-# oracle_EE_options = '' => Nothing to do
+# oracle_ee_options = '' => Nothing to do
 # licence options in 11.2+ must be changed by chopt
 # => use this method for all >= 11.2 (Doc ID 948061.1)
 # touch a statefile instead checking the logfile from chopt
@@ -112,12 +112,12 @@
   args:
     creates: "{{ oracle_home_db }}/install/chopt_{{ item.option }}_{{ item.state }}.state{{ choptcheck }}"
   with_items:
-    - "{{ oracle_EE_options }}"
+    - "{{ oracle_ee_options }}"
   become: true
   become_user: "{{ oracle_user }}"
   register: choptout
   changed_when: '"Writing" in choptout.stdout'
-  when: db_homes_config[dbh.home]['edition'] == 'EE' and oracle_EE_options is defined and disable_EE_options
+  when: db_homes_config[dbh.home]['edition'] == 'EE' and oracle_ee_options is defined and disable_ee_options
   loop_control:
     label: "{{ oracle_home_db }} {{ item.state | replace(true, 'enable') | replace(false, 'disable') }} {{ item.option }}"
   tags:

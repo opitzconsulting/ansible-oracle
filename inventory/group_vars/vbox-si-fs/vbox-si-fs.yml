@@ -19,7 +19,7 @@ configure_epel_repo: false
 configure_public_yum_repo: false
 disable_selinux: false
 
-disable_EE_options: false
+disable_ee_options: false  # noqa var-naming
 
 
 host_fs_layout:

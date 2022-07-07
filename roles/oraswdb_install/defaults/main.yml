@@ -81,18 +81,18 @@ ulimit_systemd_mapping:
   'hard stack': {name: LimitSTACK, sysctlfactor: 1024}
   'hard memlock': {name: LimitMEMLOCK, sysctlfactor: 1024}
 
-disable_EE_options: true
+disable_ee_options: true
 
-oracle_EE_options: "{%- if   db_homes_config[dbh.home]['version'] in ('18.3.0.0') %}{{ oracle_EE_options_183 }}
-                    {%- elif db_homes_config[dbh.home]['version'] in ('19.3.0.0') %}{{ oracle_EE_options_193 }}
-                    {%- elif db_homes_config[dbh.home]['version'] in ('21.3.0.0') %}{{ oracle_EE_options_213 }}
-                    {%- elif db_homes_config[dbh.home]['version'] in ('12.2.0.1') %}{{ oracle_EE_options_122 }}
-                    {%- elif db_homes_config[dbh.home]['version'] in ('12.1.0.1', '12.1.0.2') %}{{ oracle_EE_options_121 }}
-                    {%- elif db_homes_config[dbh.home]['version'] == '11.2.0.4' %}{{ oracle_EE_options_112 }}
+oracle_ee_options: "{%- if   db_homes_config[dbh.home]['version'] in ('18.3.0.0') %}{{ oracle_ee_options_183 }}
+                    {%- elif db_homes_config[dbh.home]['version'] in ('19.3.0.0') %}{{ oracle_ee_options_193 }}
+                    {%- elif db_homes_config[dbh.home]['version'] in ('21.3.0.0') %}{{ oracle_ee_options_213 }}
+                    {%- elif db_homes_config[dbh.home]['version'] in ('12.2.0.1') %}{{ oracle_ee_options_122 }}
+                    {%- elif db_homes_config[dbh.home]['version'] in ('12.1.0.1', '12.1.0.2') %}{{ oracle_ee_options_121 }}
+                    {%- elif db_homes_config[dbh.home]['version'] == '11.2.0.4' %}{{ oracle_ee_options_112 }}
                     {%- endif %}"
 
 # disable all options who requires extra licences
-oracle_EE_options_112:
+oracle_ee_options_112:
   - {option: dm, state: false}
   - {option: dv, state: false}
   - {option: lbac, state: false}
@@ -100,31 +100,31 @@ oracle_EE_options_112:
   - {option: partitioning, state: false}
   - {option: rat, state: false}
 
-oracle_EE_options_121:
+oracle_ee_options_121:
   - {option: dm, state: false}
   - {option: olap, state: false}
   - {option: partitioning, state: false}
   - {option: rat, state: false}
 
-oracle_EE_options_122:
+oracle_ee_options_122:
   - {option: oaa, state: false}
   - {option: olap, state: false}
   - {option: partitioning, state: false}
   - {option: rat, state: false}
 
-oracle_EE_options_183:
+oracle_ee_options_183:
   - {option: oaa, state: false}
   - {option: olap, state: false}
   - {option: partitioning, state: false}
   - {option: rat, state: false}
 
-oracle_EE_options_193:
+oracle_ee_options_193:
   - {option: oaa, state: false}
   - {option: olap, state: false}
   - {option: partitioning, state: false}
   - {option: rat, state: false}
 
-oracle_EE_options_213:
+oracle_ee_options_213:
   - {option: oaa, state: false}
   - {option: olap, state: false}
   - {option: partitioning, state: false}

@@ -3,8 +3,6 @@
 use_default_rules: true
 
 skip_list:
-
-  - var-naming
   # temporary deactived - will be removed in next PRs
   - schema
 
