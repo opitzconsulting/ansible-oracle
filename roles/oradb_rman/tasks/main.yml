@@ -130,7 +130,7 @@
   ansible.builtin.shell: "{{ oracle_base }}/bin/rman_backup.sh -a {{ item.1.name }} -s {{ item.0.oracle_db_instance_name | default(item.0.oracle_db_name) }} -r {{ rman_script_dir }} -l {{ rman_log_dir }} | tee -a {{ rman_cron_logdir }}/rman_{{ item.1.name }}.log"
   # noqa risky-shell-pipe yaml
   environment:
-    - PATH: /bin:/usr/bin
+    PATH: /bin:/usr/bin
   become: true
   become_user: "{{ oracle_user }}"
   register: rmanexecimmediate

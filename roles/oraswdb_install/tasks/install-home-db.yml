@@ -39,7 +39,6 @@
     mode: 0600
   run_once: "{{ configure_cluster }}"
   when: oracle_home_db not in existing_dbhome.stdout_lines
-  register:
   tags: responsefileswdb
 
 # unarchive Oracle RDBMS 12c+

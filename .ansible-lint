@@ -2,9 +2,7 @@
 
 use_default_rules: true
 
-skip_list:
-  # temporary deactived - will be removed in next PRs
-  - schema
+# skip_list:
 
 exclude_paths:
   - .github
