@@ -175,7 +175,7 @@
         - inventory_hostname == item.1
       register: rootother
 
-    - ansible.builtin..debug: var=rootother.stdout_lines  # noqa unnamed-task
+    - ansible.builtin.debug: var=rootother.stdout_lines  # noqa unnamed-task
       when: rootother.stdout_lines is defined
 
     - name: install_home_gi | Execute ConfigTools
