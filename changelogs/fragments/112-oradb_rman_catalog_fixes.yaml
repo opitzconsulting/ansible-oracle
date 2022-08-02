@@ -1,0 +1,3 @@
+---
+bugfixes:
+  - "oradb_rman: fix rman catalog and oracle wallet code"
