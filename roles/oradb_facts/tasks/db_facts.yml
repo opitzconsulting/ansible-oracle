@@ -9,6 +9,7 @@
     password: "{{ _db_password_cdb }}"
     mode: sysdba
   environment: "{{ _oracle_env }}"
+  ignore_errors: "{{ oradb_facts_ignore_erros | default(omit) }}"
   register: dbfactsreg
   vars:
     # set db_user for _db_password_cdb

@@ -3,3 +3,9 @@
 # The dbuser for connection to database.
 # @end
 oradb_facts_db_user: sys
+
+# @var oradb_facts_ignore_errors:description: >
+# Allows to set `ignore_errors` when running `oracle_facts` module against not running or not yet installed database. By default no ignore_errors is used.
+# When using, use this as role parameter and not inventory variable so that when called via dependency no ignore_errors is applied.
+# @end
+# oradb_facts_ignore_errors: true
